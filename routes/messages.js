@@ -26,6 +26,22 @@ router.get('/:RoomId',function(req,res)
 
 });
 
+router.get('/search/:RoomId',function(req,res)
+{
+    var matchQuery = {room: req.params.RoomId, payload: new RegExp(req.query.Payload)};
+    Message.count(matchQuery).then(
+        function (Result) {
+            var skip = Result > 20 ? Result - 20 : 0;
+            Message.find(matchQuery).skip(skip).limit(20).then(
+                function (Messages) {
+                    res.send(Messages);
+                }
+            );
+        }
+    );
+
+});
+
 
 
 module.exports = router;

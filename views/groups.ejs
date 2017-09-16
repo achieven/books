@@ -24,17 +24,34 @@
                     <span ng-click="UnlikeMessage(message)" ng-disabled="true === HasUnliked(message, _id)" ng-class="{like_unlike_icon: false === HasUnliked(message, _id)}" class="glyphicon glyphicon-thumbs-down like_unlike_icon"></span>
                     <span>{{message.unlikes.length}}</span>
                 </span>
-                <span class="sender" ng-click="OpenPrivateMessage(message.sender)">
-                    <span ng-if="message.sender === Username">אתה</span>
-                    <span ng-if="message.sender !== Username">{{message.sender}}</span>
+                <span ng-click="OpenPrivateMessage(message.sender)">
+                    <span ng-if="message.sender === Username" class="not_private_chat">אתה</span>
+                    <span ng-if="message.sender !== Username" class="private_chat_click">{{message.sender}}</span>
                     :</span>
                 <span class="payload">{{message.payload}}</span>
             </div>
         </div>
     </div>
-    <form ng-submit="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)">
+    <form ng-submit="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)" style="float: right; margin-right: 20px;">
+        <span style="cursor: pointer;" ng-click="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)" class="fa fa-envelope"></span>
         <input class="group_message_input" type="text" placeholder="כתוב את תוכן ההודעה" ng-model="GroupMessageContent" class="form-group message_input">
     </form>
+    <form ng-submit="SearchInMessages(CurrentGroupId, GroupMessageSearch)" style="float: left; margin-left: 20px;">
+        <input class="" type="text" placeholder="חפש בקבוצה זו" ng-model="GroupMessageSearch" class="form-group message_input">
+        <span>&#128269</span>
+    </form>
+
+    <!--<div ng-show="null !== PrivateChat" class="chat_container">-->
+        <!--<div class="chat">-->
+            <!--<div ng-repeat="message in PrivateMessages" class="message" ng-show="CurrentChatWith === PrivateChat.With">-->
+                <!--<span class="sender">{{message.sender}}:</span>-->
+                <!--<span class="payload">{{message.payload}}</span>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<form ng-show="null !== PrivateChat" ng-submit="SendPrivateMessage(PrivateChat)">-->
+        <!--<input type="text" placeholder="שלח הודעה פרטית כאן" ng-model="PrivateChat.MessageContent" class="form-group message_input">-->
+    <!--</form>-->
 
 
 
@@ -125,6 +142,9 @@
     }
 
     .sender {
+        color: #464688;
+    }
+    .private_chat_click {
         color: #464688;
         cursor: pointer;
     }
