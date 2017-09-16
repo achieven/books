@@ -33,12 +33,28 @@
         </div>
     </div>
     <form ng-submit="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)" style="float: right; margin-right: 20px;">
-        <span style="cursor: pointer;" ng-click="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)" class="fa fa-envelope"></span>
+        <span style="cursor: pointer;" ng-click="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)" class="glyphicon glyphicon-transfer"></span>
         <input class="group_message_input" type="text" placeholder="כתוב את תוכן ההודעה" ng-model="GroupMessageContent" class="form-group message_input">
     </form>
-    <form ng-submit="SearchInMessages(CurrentGroupId, GroupMessageSearch)" style="float: left; margin-left: 20px;">
-        <input class="" type="text" placeholder="חפש בקבוצה זו" ng-model="GroupMessageSearch" class="form-group message_input">
-        <span>&#128269</span>
+    <form ng-submit="SearchInMessages(CurrentGroupId, GroupMessageSearch, ShouldShowAllMessages, FromDate, ToDate)" style="float: left; margin-left: 20px;">
+        <div class="search_input_container">
+            <input type="text" placeholder="חפש בקבוצה זו" ng-model="GroupMessageSearch" class="form-group message_input">
+            <span>&#128269</span>
+        </div>
+        <div class="search_input_container">
+            <label for="ShowAllMessages">הראה את כל ההודעות</label>
+            <input id="ShowAllMessages" type="checkbox" ng-model="ShouldShowAllMessages" class="form-group message_input">
+        </div>
+        <div  class="search_input_container">
+            <input style="width:100px;" ng-value="FromDate" type="text" ng-model="FromDate" class="form-group message_input">
+            <input style="width:100px;" ng-value="ToDate" type="text" ng-model="ToDate" class="form-group message_input">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </div>
+        <div>
+            <button type="button" class="btn btn-info search_input_container" ng-click="SearchInMessages(CurrentGroupId, GroupMessageSearch, ShouldShowAllMessages, FromDate, ToDate)">
+                חפש
+            </button>
+        </div>
     </form>
 
     <!--<div ng-show="null !== PrivateChat" class="chat_container">-->
@@ -161,6 +177,10 @@
     .like_unlike_icon {
         cursor: pointer;
         color: #d5d5d5;
+    }
+    .search_input_container {
+        float: right;
+        clear: both;
     }
 </style>
 

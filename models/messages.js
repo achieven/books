@@ -14,6 +14,7 @@ var messageSchema = new Schema({ // create a schema
   sender: String,
   likes: [String],
   unlikes: [String],
+  date: Date
 });
 
 var Message = db.model('Message', messageSchema);

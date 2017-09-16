@@ -28,11 +28,25 @@ router.get('/:RoomId',function(req,res)
 
 router.get('/search/:RoomId',function(req,res)
 {
-    var matchQuery = {room: req.params.RoomId, payload: new RegExp(req.query.Payload)};
+    var matchQuery = {
+        room: req.params.RoomId,
+        payload: new RegExp(req.query.Payload),
+        date: {
+            $gte: new Date(req.query.FromDate).setHours(0,0,0),
+            $lte: (new Date(req.query.ToDate)).setHours(23,59,59),
+        }
+    };
     Message.count(matchQuery).then(
         function (Result) {
-            var skip = Result > 20 ? Result - 20 : 0;
-            Message.find(matchQuery).skip(skip).limit(20).then(
+            var skip = 0;
+            var limit = 0;
+            if ('false' === req.query.ShouldShowAllMessages) {
+                limit = 20;
+                if (Result > 20) {
+                    skip = Result - 20;
+                }
+            }
+            Message.find(matchQuery).skip(skip).limit(skip).then(
                 function (Messages) {
                     res.send(Messages);
                 }

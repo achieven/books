@@ -12,7 +12,8 @@ module.exports = function(io) {
                     payload: data.payload,
                     sender: data.sender,
                     likes: [],
-                    unlkes: []
+                    unlkes: [],
+                    date: new Date()
                 }
             )
             newMessage.save().then(

@@ -8,14 +8,21 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
     $scope.Username = $window.sessionStorage.user;
     $scope._id = $window.sessionStorage._id;
     $scope.GroupMessageContent = '';
+    $scope.ShouldShowAllMessages = false;
     $scope.GroupMessageSearch = '';
     $scope.GroupMessages = [];
+    $scope.FromDate = '1970-1-1';
+    var endDate = new Date();
+    $scope.ToDate = endDate.getUTCFullYear() + '-' + (endDate.getUTCMonth() +  1) + '-' + endDate.getUTCDate();
 
     $scope.AddGroupForm = false;
     $scope.NewGroupName = '';
     
-    var socket = io.connect('http://localhost:8002', {reconnect: true});
+    var socket = io.connect('http://localhost:8002', {reconnection: true});
     socket.on('connect', function(){});
+    socket.on('disconnect', function () {
+        alert('socket disconnected');
+    })
     
     $http.get('/groups/getGroups').then(
         function (response) {
@@ -128,8 +135,8 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
         $scope.$apply();
     });
     
-    $scope.SearchInMessages = function (Group, SearchContent) {
-        $http.get('/messages/search/' + Group + '?Payload=' + (SearchContent || '')).then(
+    $scope.SearchInMessages = function (Group, SearchContent, ShouldShowAllMessages, FromDate, ToDate) {
+        $http.get('/messages/search/' + Group + '?Payload=' + SearchContent + '&ShouldShowAllMessages=' + ShouldShowAllMessages + '&FromDate=' + FromDate + '&ToDate=' + ToDate).then(
             function (response) {
                 $scope.GroupMessages = [];
                 response.data.forEach(function (Message) {
