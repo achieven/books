@@ -52,9 +52,65 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
             function (response) {
                 response.data.forEach(function (Message) {
                     $scope.GroupMessages.push(Message);
-                });
+                }); 
             }
         );
+    };
+    
+    $scope.LikeMessage = function (Message) {
+        if (false === $scope.HasLiked(Message, $scope._id)) {
+            socket.emit('like', {
+                initiator: $scope._id,
+                messageId: Message._id,
+                room: $scope.CurrentGroupId
+            });
+        }
+    };
+
+    $scope.UnlikeMessage = function (Message) {
+        if (false === $scope.HasUnliked(Message, $scope._id)) {
+            socket.emit('unlike', {
+                initiator: $scope._id,
+                messageId: Message._id,
+                room: $scope.CurrentGroupId
+            });
+        }
+    };
+
+    socket.on('like', function (data) {
+        $scope.GroupMessages.forEach(function (CurrentMessage) {
+            if (CurrentMessage._id === data.messageId) {
+                if (-1 < CurrentMessage.unlikes.indexOf(data.initiator)) {
+                    CurrentMessage.unlikes = CurrentMessage.unlikes.filter(function (UnlikeInitiator) {
+                        return UnlikeInitiator !== data.initiator;
+                    });
+                }
+                CurrentMessage.likes.push(data.initiator);
+            }
+        });
+        $scope.$apply();
+    });
+
+    socket.on('unlike', function (data) {
+        $scope.GroupMessages.forEach(function (CurrentMessage) {
+            if (CurrentMessage._id === data.messageId) {
+                if (-1 < CurrentMessage.likes.indexOf(data.initiator)) {
+                    CurrentMessage.likes = CurrentMessage.likes.filter(function (LikeInitiator) {
+                        return LikeInitiator !== data.initiator;
+                    });
+                }
+                CurrentMessage.unlikes.push(data.initiator);
+            }
+        });
+        $scope.$apply();
+    });
+
+    $scope.HasLiked = function (Message, UserId) {
+        return (-1 < Message.likes.indexOf(UserId));
+    };
+
+    $scope.HasUnliked = function (Message, UserId) {
+        return (-1 < Message.unlikes.indexOf(UserId));
     };
 
     $scope.SendGroupMessage = function (Username, CurrentGroupId, GroupMessageContent) {

@@ -11,7 +11,9 @@ var messageSchema = new Schema({ // create a schema
   id: String,
   room: String,
   payload: String,
-  sender: String
+  sender: String,
+  likes: [String],
+  unlikes: [String],
 });
 
 var Message = db.model('Message', messageSchema);

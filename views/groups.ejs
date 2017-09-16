@@ -18,12 +18,17 @@
     <div class="chat_container">
         <div class="chat">
             <div ng-repeat="message in GroupMessages" class="message" ng-show="message.room === CurrentGroupId">
+                <span style="margin-left: 15px; float: right;">
+                    <span ng-click="LikeMessage(message)" ng-disabled="true === HasLiked(message, _id)" ng-class="{like_unlike_icon: false === HasLiked(message, _id)}" class="glyphicon glyphicon-thumbs-up"></span>
+                    <span>{{message.likes.length}}</span>
+                    <span ng-click="UnlikeMessage(message)" ng-disabled="true === HasUnliked(message, _id)" ng-class="{like_unlike_icon: false === HasUnliked(message, _id)}" class="glyphicon glyphicon-thumbs-down like_unlike_icon"></span>
+                    <span>{{message.unlikes.length}}</span>
+                </span>
                 <span class="sender" ng-click="OpenPrivateMessage(message.sender)">
                     <span ng-if="message.sender === Username">אתה</span>
                     <span ng-if="message.sender !== Username">{{message.sender}}</span>
                     :</span>
                 <span class="payload">{{message.payload}}</span>
-                <span class="glyphicon glyphicon-thumbs-up"></span>
             </div>
         </div>
     </div>
@@ -120,7 +125,7 @@
     }
 
     .sender {
-        color: #0e0e1f;
+        color: #464688;
         cursor: pointer;
     }
     .payload {
@@ -132,6 +137,10 @@
     .add_group_container {
         background-color: #357791 !important;
         width: 250px;
+    }
+    .like_unlike_icon {
+        cursor: pointer;
+        color: #d5d5d5;
     }
 </style>
 

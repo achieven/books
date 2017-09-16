@@ -10,15 +10,54 @@ module.exports = function(io) {
                 {
                     room: data.room,
                     payload: data.payload,
-                    sender: data.sender
+                    sender: data.sender,
+                    likes: [],
+                    unlkes: []
                 }
             )
             newMessage.save().then(
                 function (NewMessage) {
-                    io.to(data.room).emit('group-message', {sender: data.sender, payload: data.payload, room: data.room});
+                    io.to(data.room).emit('group-message', NewMessage.toObject());
                 }
             );
         });
+
+        socket.on('like', function (data) {
+            message.findOne({_id: data.messageId}).then(
+                function (CurrentMessage) {
+                    if (-1 < CurrentMessage.unlikes.indexOf(data.initiator)) {
+                        CurrentMessage.unlikes = CurrentMessage.unlikes.filter(function (UnlikeInitiator) {
+                            return UnlikeInitiator !== data.initiator;
+                        });
+                    }
+                    CurrentMessage.likes.push(data.initiator);
+                    CurrentMessage.save().then(
+                        function (UpdatedMessage) {
+                            io.to(data.room).emit('like', {initiator: data.initiator, messageId: data.messageId});
+                        }
+                    );
+                }
+            );
+        });
+
+        socket.on('unlike', function (data) {
+            message.findOne({_id: data.messageId}).then(
+                function (CurrentMessage) {
+                    if (-1 < CurrentMessage.likes.indexOf(data.initiator)) {
+                        CurrentMessage.likes = CurrentMessage.likes.filter(function (LikeInitiator) {
+                            return LikeInitiator !== data.initiator;
+                        });
+                    }
+                    CurrentMessage.unlikes.push(data.initiator);
+                    CurrentMessage.save().then(
+                        function (UpdatedMessage) {
+                            io.to(data.room).emit('unlike', {initiator: data.initiator, messageId: data.messageId});
+                        }
+                    )
+                }
+            );
+        });
+
         socket.on('private-message', function (data) {
             for (var room in socket.rooms) {
                 var currentChatRoom = socket.rooms[room];

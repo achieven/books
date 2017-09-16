@@ -37,10 +37,9 @@ app.controller("registeringCtrl", function($scope, $http, $window) {
             password: $scope.password,
             picture: $scope.picture
         };
-		 debugger;
 		$http.post("addUser", data).then(
 		function(response){
-			debugger;
+			$window.location = '/';
 	  	},
 	  	function(response){
 	     	alert('! לא מלאת נכון ,אולי הוספת רווח');
