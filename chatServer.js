@@ -3,7 +3,20 @@ var message = require('./models/messages');
 module.exports = function(io) {
     io.on('connection', function(socket){
         socket.on('join-room', function (data) {
-            socket.join(data);
+            if (-1 < data.indexOf('_')) {
+                var found = false;
+                for (var Socket in io.sockets.sockets) {
+                    if (io.sockets.sockets[Socket].rooms[data]) {
+                        socket.join(data);
+                        found = true;
+                    }
+                }
+                if (false === found) {
+                    socket.join(data.split('_')[1] + '_' + data.split('_')[0]);
+                }
+            } else {
+                socket.join(data);
+            }
         });
         socket.on('group-message', function (data) {
             var newMessage = new message(
@@ -23,6 +36,38 @@ module.exports = function(io) {
             );
         });
 
+        socket.on('private-message', function (data) {
+            for (var room in socket.rooms) {
+                var currentChatRoom = socket.rooms[room];
+                if (data.sender + '_' + data.with === currentChatRoom || data.with + '_' + data.sender === currentChatRoom) {
+                    var newMessage = new message(
+                        {
+                            room: currentChatRoom,
+                            payload: data.payload,
+                            sender: data.sender,
+                            likes: [],
+                            unlkes: [],
+                            date: new Date()
+                        }
+                    )
+                    newMessage.save().then(
+                        function (NewMessage) {
+                            io.to(currentChatRoom).emit('private-message', {sender: data.sender, payload: data.payload});
+                        }
+                    );
+                }
+            }
+        });
+
+        socket.on('whats-my-private-room', function (data) {
+            for (var room in socket.rooms) {
+                var currentChatRoom = socket.rooms[room];
+                if (data.sender + '_' + data.with === currentChatRoom || data.with + '_' + data.sender === currentChatRoom) {
+                    io.to(currentChatRoom).emit('your-room-is', currentChatRoom);
+                }
+            }
+        });
+        
         socket.on('like', function (data) {
             message.findOne({_id: data.messageId}).then(
                 function (CurrentMessage) {
@@ -59,15 +104,6 @@ module.exports = function(io) {
             );
         });
 
-        socket.on('private-message', function (data) {
-            for (var room in socket.rooms) {
-                var currentChatRoom = socket.rooms[room];
-                if (data.sender + '_' + data.with === currentChatRoom || data.with + '_' + data.sender === currentChatRoom) {
-                    io.to(currentChatRoom).emit('private-message', {sender: data.sender, payload: data.payload});
-                }
-            }
-        });
-
         socket.on('private_message', function (data) {
             return helper.AddPrivateMessage(data.sender, data.recepient, data.payload).then(
                 () => {
@@ -81,8 +117,6 @@ module.exports = function(io) {
                     });
                 }
             )
-
-            // client.publish('messages/'+data.room,data.payload, {qos:1})
         });
 
         socket.on('group_message', function (data) {

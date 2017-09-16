@@ -5,6 +5,7 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
         return;
     }
 
+    $scope.PrivateChat = null;
     $scope.Username = $window.sessionStorage.user;
     $scope._id = $window.sessionStorage._id;
     $scope.GroupMessageContent = '';
@@ -31,6 +32,15 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
                 socket.emit('join-room', Group._id);
             });
             $scope.SetCurrentChat($scope.Groups[0]._id);
+        }
+    );
+
+    $http.get('/usersjson').then(
+        function (response) {
+            $scope.Users = response.data;
+            $scope.Users.forEach(function (User) {
+                socket.emit('join-room', $scope.Username + '_' + User.username);
+            });
         }
     );
 
@@ -62,6 +72,7 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
                     $scope.GroupMessages.push(Message);
                 });
                 $scope.GroupMessageSearch = '';
+                $scope.PrivateChat = null;
             }
         );
     };
@@ -146,28 +157,37 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
         );
     };
     
-    // $scope.OpenPrivateMessage = function (SendTo) {
-    //     socket.emit('join-room', $window.sessionStorage.user + '_' + SendTo);
-    //     $scope.PrivateChat = {With: SendTo};
-    //     $scope.CurrentChatWith = SendTo;
-    // };
-    //
-    // $scope.SendPrivateMessage = function (PrivateChat) {
-    //     socket.emit('private-message', {
-    //         sender: $window.sessionStorage.user,
-    //         with: PrivateChat.With,
-    //         payload: PrivateChat.MessageContent
-    //     });
-    // };
-    //
-    // socket.on('private-message', function (data){
-    //     data.sender = (data.sender !== $window.sessionStorage.user) ? data.sender : 'You'
-    //     if (!$scope.PrivateMessages) {
-    //         $scope.PrivateMessages = [];
-    //     }
-    //     $scope.PrivateMessages.push(data);
-    //     $scope.$apply();
-    // });
+    $scope.OpenPrivateMessage = function (SendTo) {
+        socket.emit('whats-my-private-room', {sender: $scope.Username , with: SendTo});
+        socket.on('your-room-is', function (data){
+            $scope.CurrentGroupId = data;
+            $http.get('/messages/' + data).then(
+                function (response) {
+                    $scope.PrivateMessages = [];
+                    response.data.forEach(function (Message) {
+                        $scope.PrivateMessages.push(Message);
+                    });
+                    $scope.PrivateChat = {With: SendTo};
+                    $scope.CurrentChatWith = SendTo;
+                    $scope.CurrentGroupId = null;
+                }
+            );
+        });
+    };
+
+    $scope.SendPrivateMessage = function (CurrentChatWith, PrivateChatContent) {
+        socket.emit('private-message', {
+            sender: $scope.Username,
+            with: CurrentChatWith,
+            payload: PrivateChatContent
+        });
+    };
+
+    socket.on('private-message', function (data){
+        $scope.PrivateMessages.push(data);
+        $scope.PrivateChatContent = '';
+        $scope.$apply();
+    });
 
 
     // $scope.OpenOrCloseGroupChatMessage = function (BookId) {
