@@ -1,0 +1,323 @@
+    <!DOCTYPE html>
+	<html lang="en">
+  <head>
+	    <% include partials/head %>
+	</head>
+	<body class="container" style="background-color : #357791;" onload="updateList();" >
+	    <header>
+	        <% include partials/header %>
+    </header>
+	    <main>
+		
+		
+			<div id ="heara"> 
+				<p class= "txtExplain"> .עבור עדכון משתמש אסור לשנות השם משתמש כי על ידי זה מזהים אותו </p>
+				<p class= "txtExplain">.כל שאר השדות אפשר לשים ערכים חדשים </p>
+				
+		</div>
+		
+		<div id="the-table">
+	
+	       <table id="list" style="border: 1px solid black;" >
+   
+          <caption > רשימת המשתמשים</caption>
+          <tr id ="titles">
+             <th>שם</th>
+             <th>שם משתמש</th>
+			 <th>סוג</th>
+          </tr>
+		  </table>
+		  
+		</div>
+		  
+		 
+		  <div id="actions"> 
+		  
+		  <div class="form-group" >
+				<label for="usr">: שם</label>
+				<input type="text" class="form-control" id="usr">
+		  </div>
+		  <div class="form-group">
+				<label for="usrname">:שם משתמש</label>
+				<input type="text" class="form-control" id="usrname">
+		  </div>
+		  <div class="form-group">
+				<label for="type">:סוג</label>
+				<input type="text" class="form-control" id="type">
+		  </div>
+		  <div class="form-group">
+				<label for="password">:סיסמה</label>
+				<input type="text" class="form-control" id="password">
+		  </div>
+		  <div class="form-group">
+				<label for="firmId">:מזהה סניף</label>
+				<input type="text" class="form-control" id="firmId">
+		  </div>
+		  
+		  <button type="button" onclick="addUser()" id="add" class="btn btn-primary" > הוסף</button>
+		 
+		  </div>
+		  
+		  
+		 
+	    </main>
+	    <footer>
+	      	      <% include partials/footer %>
+
+	    </footer>
+	</body>
+	</html>
+	<style> 
+	     table
+         {
+               border-collapse: collapse;
+         }
+		 
+		 label
+		 {
+		   float:right;
+		   position : relative;
+		   right: 30%;
+		 }
+         td, th 
+         {
+               border: 1px solid black;
+			   width:90px; 
+			   height:50px;
+         }
+		 
+		 #usr, #usrname, #type , #password , #firmId
+		 {
+		       width : 40%;
+		 }
+		 
+		
+		 .txtExplain
+		 {
+		   font-size: 18px;
+		   color: orange;
+		 }
+		 
+		 #heara
+		 {
+		   position : relative;
+		   left: 10%;
+		   top: 50%;
+		   display: block;
+		 }
+		 
+		 #the-table
+		 {
+		    display: inline-block;
+			position : relative;
+			left : 10%;
+			bottom : 30 %;
+			  
+		 }
+		 
+		  #actions
+		  {
+		      display: inline-block;
+			  position : relative;
+			  left : 20%;
+			  bottom: 80%;
+			 
+		  }
+		  
+		  
+		  #del  
+		  {
+				position : relative;
+				left : 5%;
+		  
+		  }
+		  #mod
+		  {
+		       position : relative;
+			   left : 10%;
+		  }
+		 
+	</style>
+	
+		
+	<script>
+	
+    function updateList() {
+	var username = sessionStorage.getItem('UserName');
+	actualisation_of_menu();
+
+	if(username != null )
+	{ 
+	 document.getElementById("butlogin").innerHTML = "להתנתק";
+       }
+      var list = document.getElementById("list");
+      //list.innerHTML = ""; // empty the list
+      if (!XMLHttpRequest) return;
+      var ajax = new XMLHttpRequest();
+      ajax.open("GET", "/usersjson");
+      ajax.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var users = JSON.parse(this.responseText);
+		  var currentType = sessionStorage.getItem('Type');
+		  
+		  if (currentType == 'director')
+		  {
+				var tr_titles = document.getElementById("titles");
+				var td_pwd = document.createElement('td');
+			    tr_titles.appendChild(td_pwd);
+			    var tit_tdText = document.createTextNode("סיסמה");
+			    td_pwd.appendChild(tit_tdText);
+				var td_firm = document.createElement('td');
+			    tr_titles.appendChild(td_firm);
+			    tit_tdText = document.createTextNode("מזהה סניף");
+			    td_firm.appendChild(tit_tdText);
+				var actionsPanel = document.getElementById("actions");
+				var butDel = $('<button type="button" onclick="delUser()" id="del"  class="btn btn-danger"> מחק</button>');
+				butDel.appendTo(actionsPanel);
+				var butModif = $('<button type="button" onclick="modUser()" id="mod" class="btn btn-warning"> עדכן</button>');
+				butModif.appendTo(actionsPanel);
+		  }
+          users.forEach(function(user, index) {
+            if (currentType == 'director')
+			{
+			    var tr = document.createElement('tr');
+                tr.setAttribute("data-index", "" + index);
+                list.appendChild(tr);
+			    var td = document.createElement('td');
+			    tr.appendChild(td);
+			    var tdText = document.createTextNode(user.name);
+			    td.appendChild(tdText);
+			    var td1 = document.createElement('td');
+			    tr.appendChild(td1);
+			    tdText = document.createTextNode(user.username);
+			    td1.appendChild(tdText);
+				var td3= document.createElement('td');
+				tr.appendChild(td3);
+				var tdText = document.createTextNode(user.type);
+				td3.appendChild(tdText);
+				var td2= document.createElement('td');
+				tr.appendChild(td2);
+				var tdText = document.createTextNode(user.password);
+				td2.appendChild(tdText);
+				var td4= document.createElement('td');
+				tr.appendChild(td4);
+				var tdText = document.createTextNode(user.firmId);
+				td4.appendChild(tdText);
+		    }
+			else  // currentType == employee
+			{
+			
+			   if (user.type == 'client')
+			   {
+			   var tr = document.createElement('tr');
+                tr.setAttribute("data-index", "" + index);
+                list.appendChild(tr);
+			    var td = document.createElement('td');
+			    tr.appendChild(td);
+			    var tdText = document.createTextNode(user.name);
+			    td.appendChild(tdText);
+			    var td1 = document.createElement('td');
+			    tr.appendChild(td1);
+			    tdText = document.createTextNode(user.username);
+			    td1.appendChild(tdText);
+				var td3= document.createElement('td');
+				tr.appendChild(td3);
+				var tdText = document.createTextNode(user.type);
+				td3.appendChild(tdText);
+			   }
+			   
+			
+			}
+          });
+		  
+        };
+      };
+      ajax.send();
+    }
+	
+		function  addUser ()
+		{
+			var usr = document.getElementById("usr").value;
+			var usrname = document.getElementById("usrname").value;
+			var type = document.getElementById("type").value;
+			var password = document.getElementById("password").value;
+			var firmId = document.getElementById("firmId").value;
+			 $.ajax({
+            type: "POST",
+            url: "/addUser",
+            data: "usr=" + usr + "&usrname=" + usrname + "&type=" + type + "&password=" + password + "&firmId=" + firmId ,
+           }).done(function(resp)
+		   {
+		   if(resp.successe)
+		      { 
+			    window.location.reload();
+			  }
+			  
+		   else // not succeeded
+			  {
+				alert('! לא מלאת נכון ,אולי הוספת רווח'); 
+			  }
+			  
+		
+		    });
+		     	alert(resp.successe);
+		}
+		
+		function delUser()
+		{
+		  var usr = document.getElementById("usr").value;
+			var usrname = document.getElementById("usrname").value;
+			var type = document.getElementById("type").value;
+			var password = document.getElementById("password").value;
+			var firmId = document.getElementById("firmId").value;
+			 $.ajax({
+            type: "POST",
+            url: "/delUser",
+            data: "usr=" + usr + "&usrname=" + usrname + "&type=" + type + "&password=" + password + "&firmId=" + firmId ,
+           }).done(function(resp)
+		   {
+		   if(resp.successe)
+		      { 
+			    window.location.reload();
+			  }
+			  
+		   else // not succeeded
+			  {
+				alert('! לא מלאת נכון ,אולי הוספת רווח'); 
+			  }
+			  
+		    });
+		
+		}
+		
+		
+		function modUser()
+		{
+		    var usr = document.getElementById("usr").value;
+			var usrname = document.getElementById("usrname").value;
+			var type = document.getElementById("type").value;
+			var password = document.getElementById("password").value;
+			var firmId = document.getElementById("firmId").value;
+			 $.ajax({
+            type: "POST",
+            url: "/modUser",
+            data: "usr=" + usr + "&usrname=" + usrname + "&type=" + type + "&password=" + password + "&firmId=" + firmId ,
+           }).done(function(resp)
+		   {
+		   if(resp.successe)
+		      { 
+			    window.location.reload();
+			  }
+			  
+		   else // not succeeded
+			  {
+				alert('! לא מלאת נכון ,אולי הוספת רווח'); 
+			  }
+			  
+			
+		    });
+		
+		}
+
+	</script>
+

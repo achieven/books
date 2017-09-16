@@ -1,0 +1,93 @@
+<main ng-init="updateList()">
+
+	       <ul id="booksCategories">
+  			    <li ng-repeat="category in bCategories">
+            <div ng-class="{'active': category.name == states.activeItem}" ng-click="categoryChosen(category)" role="button">
+            {{category.name}}</div></li>
+	       </ul>
+         
+	  
+	    <div id="listBooks" class="container">
+  			<div class="row">
+   			 <div id="item" ng-repeat="book in books" ng-if="book.category === mycategory" class="col-sm-3">
+      			<img ng-src="{{book.picture}}" alt="logo" width="130" height="150">
+      			<p>{{book.name}}</p>
+            <div class="row">
+            <a class="col-sm-5" id="buyButton" href="#!paiement">קנה</a>
+      			<div class="col-sm-7">₪ {{book.price}}</div>
+            </div>
+    		 </div>
+       </div>
+      </div>
+
+
+</main>
+
+
+<style>
+      body 
+      {
+      	padding-top : 70px;
+      }
+
+      #booksCategories {
+    list-style-type: none;
+    margin: 0 0 0 0;
+    padding: 0;
+    width: 270px;
+    background-color: #96835d;
+    border: 1px solid #555;
+    float: right;
+}
+
+  #booksCategories li div {
+    display: block;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+   #booksCategories li {
+    text-align: center;
+    border-bottom: 1px solid #555;
+}
+
+  #booksCategories li:last-child {
+    border-bottom: none;
+}
+
+  #booksCategories li div.active {
+    background-color: #183a68;
+    color: white;
+}
+
+  #booksCategories li a:hover:not(.active) {
+    background-color: #d5d5d5;
+    color: white;
+}
+
+#listBooks
+{
+	padding-top : 70px;
+}
+
+#item
+{
+  background-color : #96835d;
+  border-style: solid;
+  margin-right : 15px;
+  margin-bottom : 15px;
+  border-color : #a0832c;
+  width: 230px;
+}
+
+
+
+#buyButton {
+      text-decoration:none;
+      background-color : #2c90a0;
+  color: #c99f2a;
+  Font-Weight: bold;
+  width: 75px;
+  }
+</style>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <% include partials/head %>
+
+</head>
+<body ng-app="myApp" style="background-color : #357791;" align ="center">
+    <header ng-controller="indexCtrl" ng-init='initialisation()'>
+        <% include partials/header %>
+    </header>
+    	<div ng-view></div> 
+
+    <footer>
+		      <% include partials/footer %>
+
+    </footer>
+</body>
+
+</html>
+
+	

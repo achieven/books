@@ -1,0 +1,138 @@
+<main>
+    <ul id="booksCategories">
+        <div class="groups_container">
+            <li ng-repeat="group in Groups">
+                    <div role="button" ng-click="SetCurrentChat(group._id)" ng-class="{current_chat: group._id === CurrentGroupId}">
+                        {{group.name}}
+                        <span ng-if="group.admin === Username">(מנהל)</span>
+                    </div>
+            </li>
+        </div>
+        <li class="add_group_container">
+            <button ng-show="false === AddGroupForm" id="addGroup" ng-click="CreateGroupForm()">צור קבוצה חדשה</button>
+            <input ng-show="true === AddGroupForm" ng-model="NewGroupName" placeholder="הקש את שם הקבוצה" type="text">
+            <button ng-show="true === AddGroupForm" ng-click="DontAddGroup()">בטל</button>
+            <button ng-show="true === AddGroupForm" ng-click="DoAddGroup(NewGroupName)">שמור</button>
+        </li>
+    </ul>
+    <div class="chat_container">
+        <div class="chat">
+            <div ng-repeat="message in GroupMessages" class="message" ng-show="message.room === CurrentGroupId">
+                <span class="sender" ng-click="OpenPrivateMessage(message.sender)">
+                    <span ng-if="message.sender === Username">אתה</span>
+                    <span ng-if="message.sender !== Username">{{message.sender}}</span>
+                    :</span>
+                <span class="payload">{{message.payload}}</span>
+                <span class="glyphicon glyphicon-thumbs-up"></span>
+            </div>
+        </div>
+    </div>
+    <form ng-submit="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)">
+        <input class="group_message_input" type="text" placeholder="כתוב את תוכן ההודעה" ng-model="GroupMessageContent" class="form-group message_input">
+    </form>
+
+
+
+
+</main>
+
+<style>
+    body
+    {
+        padding-top : 70px;
+    }
+
+    #addGroup {
+        width: 100%;
+        background-color: #214a6b;
+        color: white;
+    }
+
+    #booksCategories {
+        list-style-type: none;
+        margin: 0 0 0 0;
+        padding: 0;
+        width: 270px;
+        float: right;
+    }
+
+    #booksCategories li div {
+        display: block;
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+
+    #booksCategories li {
+        background-color: #96835d;
+        text-align: center;
+        border-bottom: 1px solid #555;
+    }
+
+    #booksCategories li:last-child {
+        border-bottom: none;
+    }
+
+    #booksCategories li div.active {
+        background-color: #183a68;
+        color: white;
+    }
+
+    #booksCategories li a:hover:not(.active) {
+        background-color: #d5d5d5;
+        color: white;
+    }
+
+    .chat_container {
+        width: calc(100% - 270px);
+        height: 600px;
+        margin-bottom: 20px;
+        padding-right: 20px;
+    }
+    .chat {
+        float: right;
+        overflow-y: auto;
+        height: 100%;
+    }
+
+    .group_message_input {
+        width: 500px;
+        text-align: right;
+    }
+    .group_message_input::-webkit-input-placeholder {
+        text-align:right;
+    }
+    .group_message_input:-moz-placeholder {
+        text-align:right;
+    }
+    .group_message_input::placeholder {
+        text-align:right;
+    }
+    .groups_container {
+        height: 600px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+
+    .message {
+        text-align: right;
+        padding-right: 15px;
+    }
+
+    .sender {
+        color: #0e0e1f;
+        cursor: pointer;
+    }
+    .payload {
+        color: white;
+    }
+    .current_chat {
+        background-color: #4b4b4e;
+    }
+    .add_group_container {
+        background-color: #357791 !important;
+        width: 250px;
+    }
+</style>
+
+	

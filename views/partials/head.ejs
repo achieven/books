@@ -1,0 +1,70 @@
+<!-- views/partials/head.ejs -->
+<meta charset="UTF-8">
+<title>Super Awesome</title>
+<!-- JQUERY (load the JQUERY framework from a CDN) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!--CSS/JS (load bootstrap framework from a CDN) -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<style>
+
+</style>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+<script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+
+ <script>
+   var app = angular.module('myApp', ["ngRoute", "ui.bootstrap"]);
+    app.config(function($routeProvider) {
+        $routeProvider
+        .when("/", {
+            templateUrl : "home",
+        })
+        .when("/home", {
+            templateUrl : "home",
+        })
+        .when("/about", {
+            templateUrl : "about",
+            controller : "aboutCtrl"
+        })
+        .when("/communication", {
+            templateUrl : "communication",
+            controller : "communicationCtrl"
+        })
+        .when("/error", {
+            templateUrl : "error",
+        })
+        .when("/users", {
+            templateUrl : "users",
+            controller : "usersCtrl"
+        })
+        .when("/books", {
+            templateUrl : "books",
+            controller : "booksCtrl"
+        })
+        .when("/groups", {
+            templateUrl : "groups",
+            controller : "groupsCtrl"
+        })
+        .when("/registering", {
+            templateUrl : "registering",
+             controller : "registeringCtrl"
+        })
+        .when("/paiement", {
+            templateUrl : "paiement"
+        });
+    });
+ </script>
+<script src="javascripts\controllers\indexCtrl.js"></script>
+  <script src="javascripts\controllers\communicationCtrl.js"></script>
+  <script src="javascripts\controllers\firmsCtrl.js"></script>
+  <script src="javascripts\controllers\usersCtrl.js"></script>
+  <script src="javascripts\controllers\booksCtrl.js"></script>
+  <script src="javascripts\controllers\aboutCtrl.js"></script>
+  <script src="javascripts\controllers\registeringCtrl.js"></script>
+<script src="javascripts\controllers\groupsCtrl.js"></script>
+

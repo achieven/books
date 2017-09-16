@@ -1,0 +1,58 @@
+<main>
+		<h2>: תשלום</h2>
+
+    <div id="addressDiv"> 
+      <div class="form-group" >
+          <label for="address">: כתובת לשלוח את הספר</label>
+          <input type="text" class="form-control"  ng-model="address" id="address">
+      </div>
+
+    </div>
+
+
+   <br/>
+   <br/>
+	 <div id="paypal-button"></div>
+
+</main>
+
+<style>
+	 body 
+      {
+      	padding-top : 120px;
+      }
+
+        p, h1, h3,label,h2
+	{
+		color : #e3eced;
+	}	
+
+  #address
+  {
+    width: 280px;
+  }
+
+  #addressDiv
+  {
+     display: inline-block;
+  }
+</style>
+
+
+<script>
+        paypal.Button.render({
+
+            env: 'production', // Or 'sandbox',
+
+            commit: true, // Show a 'Pay Now' button
+
+            payment: function() {
+                // Set up the payment here
+            },
+
+            onAuthorize: function(data, actions) {
+                // Execute the payment here
+           }
+
+        }, '#paypal-button');
+    </script>

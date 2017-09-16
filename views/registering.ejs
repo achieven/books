@@ -1,0 +1,72 @@
+<main>
+
+<h2> : משתמש חדש </h2>
+  
+  <div id="actions"> 
+		  
+		  <div class="form-group" >
+				<label for="name">: שם</label>
+				<input type="text" class="form-control"  ng-model="name" id="name">
+		  </div>
+		  <div class="form-group">
+				<label for="username">:שם משתמש</label>
+				<input type="text" class="form-control" ng-model="username" id="username">
+		  </div>
+		  <div class="form-group">
+				<label for="password">:סיסמה</label>
+				<input type="text" class="form-control"  ng-model="password" id="password">
+		  </div>
+
+		   <div class="form-group">
+				<label for="email">:כתובת מייל </label>
+				<input type="text" class="form-control" ng-model="email" id="email">
+		  </div>
+
+		  <div class="row">
+		  		<div class="col-sm-4"> <button type="button" ng-click="choosingPic()" id="choosePic" > בחר תמונה</button> </div>
+				<div class="col-sm-6"> <form id="uploadForm" enctype="multipart/form-data" action="http://127.0.0.1:8001/addUser" method="post"> </form>
+				<input type="file" class="inputfile" id="inpFile" ng-hide= true ng-model="picture" name="inpFile" onchange="angular.element(this).scope().displayName(this)"/> <p class="thefile">אין קובץ נבחר</p> </div>
+
+				 <div class="col-sm-2"> <label for="picture">:תמונה</label> </div>
+		  </div>
+		  <br>
+
+		  <button type="button" ng-click="addUser()" id="add" >צור משתמש</button>
+		 
+		  </div>
+
+</main>
+
+<style>
+	body 
+      {
+      	padding-top : 100px;
+        color : #e3eced;
+      }
+
+       #actions
+		  {
+		      display: inline-block;
+		  }
+
+	   #choosePic{
+	   		background-color : #2c90a0;
+	   		color: #c99f2a;
+	   		Font-Weight: bold;
+	   		border-radius: 2px;
+	   		border-color: #c99f2a;
+	   		width:  80px;
+	   }
+
+	   #add
+	   {
+	   	background-color : #a5a85f;
+	   		color: white;
+	   		Font-Weight: bold;
+	   		border-radius: 5px;
+	   		border-color: white;
+	   		width: 200px;
+	   }
+
+</style>
+
