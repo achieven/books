@@ -35,7 +35,7 @@
         </div>
         <form ng-submit="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)" class="message_form">
             <span style="cursor: pointer;" ng-click="SendGroupMessage(Username, CurrentGroupId, GroupMessageContent)" class="glyphicon glyphicon-transfer"></span>
-            <input class="group_message_input" type="text" placeholder="כתוב את תוכן ההודעה" ng-model="GroupMessageContent" class="form-group message_input">
+            <input class="group_message_input" type="text" placeholder="שלח הודעה לקבוצה" ng-model="GroupMessageContent" class="form-group message_input">
         </form>
         <form ng-submit="SearchInMessages(CurrentGroupId, GroupMessageSearch, ShouldShowAllMessages, FromDate, ToDate)" style="float: left; margin-left: 20px;">
             <div class="search_input_container">
