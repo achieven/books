@@ -149,10 +149,18 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
     $scope.SearchInMessages = function (Group, SearchContent, ShouldShowAllMessages, FromDate, ToDate) {
         $http.get('/messages/search/' + Group + '?Payload=' + SearchContent + '&ShouldShowAllMessages=' + ShouldShowAllMessages + '&FromDate=' + FromDate + '&ToDate=' + ToDate).then(
             function (response) {
-                $scope.GroupMessages = [];
-                response.data.forEach(function (Message) {
-                    $scope.GroupMessages.push(Message);
-                });
+                debugger;
+                if (-1 < Group.indexOf('_')) {
+                    $scope.PrivateMessages = [];
+                    response.data.forEach(function (Message) {
+                        $scope.PrivateMessages.push(Message);
+                    });
+                } else {
+                    $scope.GroupMessages = [];
+                    response.data.forEach(function (Message) {
+                        $scope.GroupMessages.push(Message);
+                    });
+                }
             }
         );
     };
@@ -167,9 +175,8 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
                     response.data.forEach(function (Message) {
                         $scope.PrivateMessages.push(Message);
                     });
-                    $scope.PrivateChat = {With: SendTo};
+                    $scope.PrivateChat = true;
                     $scope.CurrentChatWith = SendTo;
-                    $scope.CurrentGroupId = null;
                 }
             );
         });
