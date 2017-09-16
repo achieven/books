@@ -8,6 +8,7 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
     $scope.Username = $window.sessionStorage.user;
     $scope._id = $window.sessionStorage._id;
     $scope.GroupMessageContent = '';
+    $scope.GroupMessageSearch = '';
     $scope.GroupMessages = [];
 
     $scope.AddGroupForm = false;
@@ -53,6 +54,7 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
                 response.data.forEach(function (Message) {
                     $scope.GroupMessages.push(Message);
                 });
+                $scope.GroupMessageSearch = '';
             }
         );
     };
