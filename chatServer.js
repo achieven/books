@@ -52,7 +52,7 @@ module.exports = function(io) {
                     )
                     newMessage.save().then(
                         function (NewMessage) {
-                            io.to(currentChatRoom).emit('private-message', {sender: data.sender, payload: data.payload});
+                            io.to(NewMessage.room).emit('private-message', {sender: data.sender, payload: data.payload});
                         }
                     );
                 }
@@ -67,7 +67,7 @@ module.exports = function(io) {
                 }
             }
         });
-        
+
         socket.on('like', function (data) {
             message.findOne({_id: data.messageId}).then(
                 function (CurrentMessage) {
