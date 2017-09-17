@@ -22,7 +22,7 @@ router.post('/addNewGroup/:GroupName/:Admin',function(req,res)
     var newGroup = new Group(
         {
             name: req.params.GroupName,
-            admin: req.params.Admin
+            admin: req.session.user
         }
     );
     return newGroup.save().then(
