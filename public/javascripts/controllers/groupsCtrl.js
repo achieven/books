@@ -44,25 +44,6 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
         }
     );
 
-    $scope.CreateGroupForm = function () {
-        $scope.AddGroupForm = true;
-    };
-    
-    $scope.DontAddGroup = function () {
-        $scope.NewGroupName = '';
-        $scope.AddGroupForm = false;
-    };
-
-    $scope.DoAddGroup = function (NewGroupName) {
-        $http.post('groups/addNewGroup/' + NewGroupName + '/' + $window.sessionStorage.user).then(
-            function (response) {
-                $scope.AddGroupForm = false;
-                $scope.NewGroupName = '';
-                $scope.Groups.push(response.data);
-            }
-        );
-    };
-
     $scope.SetCurrentChat = function (RoomId) {
         $scope.CurrentGroupId = RoomId;
         $http.get('/messages/' + RoomId).then(
@@ -73,6 +54,25 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
                 });
                 $scope.GroupMessageSearch = '';
                 $scope.PrivateChat = null;
+            }
+        );
+    };
+
+    $scope.CreateGroupForm = function () {
+        $scope.AddGroupForm = true;
+    };
+    
+    $scope.DontAddGroup = function () {
+        $scope.NewGroupName = '';
+        $scope.AddGroupForm = false;
+    };
+
+    $scope.DoAddGroup = function (NewGroupName) {
+        $http.post('groups/addNewGroup/' + NewGroupName).then(
+            function (response) {
+                $scope.AddGroupForm = false;
+                $scope.NewGroupName = '';
+                $scope.Groups.push(response.data);
             }
         );
     };
@@ -149,7 +149,6 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
     $scope.SearchInMessages = function (Group, SearchContent, ShouldShowAllMessages, FromDate, ToDate) {
         $http.get('/messages/search/' + Group + '?Payload=' + SearchContent + '&ShouldShowAllMessages=' + ShouldShowAllMessages + '&FromDate=' + FromDate + '&ToDate=' + ToDate).then(
             function (response) {
-                debugger;
                 if (-1 < Group.indexOf('_')) {
                     $scope.PrivateMessages = [];
                     response.data.forEach(function (Message) {
@@ -195,202 +194,5 @@ app.controller("groupsCtrl", function($scope,$http, $window, $location, $q) {
         $scope.PrivateChatContent = '';
         $scope.$apply();
     });
-
-
-    // $scope.OpenOrCloseGroupChatMessage = function (BookId) {
-    //     $scope.books.forEach(function (Book) {
-    //         if (Book._id === BookId) {
-    //             if (true === Book.ShowChatInput) {
-    //                 Book.ShowChatInput = false;
-    //             } else {
-    //                 Book.ShowChatInput = true;
-    //             }
-    //         } else {
-    //             Book.ShowChatInput = false;
-    //         }
-    //     });
-    // };
-    //
-    // $scope.OpenOrClosePrivateChatMessage = function (Username, BookId) {
-    //     $scope.books.forEach(function (Book){
-    //         if (Book._id === BookId) {
-    //             Book.users.forEach(function (User) {
-    //                 if (User.Username === Username) {
-    //                     if (true === User.ShowChatInput) {
-    //                         User.ShowChatInput = false;
-    //                     } else {
-    //                         User.ShowChatInput = true;
-    //                     }
-    //                 } else {
-    //                     User.ShowChatInput = false;
-    //                 }
-    //             });
-    //         } else {
-    //             Book.users.forEach(function (User) {
-    //                 User.ShowChatInput = false;
-    //             });
-    //         }
-    //     });
-    // };
-    //
-    // $scope.categoryChosen = function(category) {
-    // 	$http.get("booksJson").then(function(response) {
-    //         $scope.books = response.data;
-    //         $scope.mycategory = category.address;
-    //         $scope.states.activeItem=category.name;
-    //         var socket = null;
-    //             initSocket();
-    //         function initSocket () {
-    //             socket = io('/');
-    //             socket.on('connect', function(){
-    //                 socket.emit('register_private_socket', {
-    //                     username: $scope.myUserName
-    //                 });
-    //             });
-    //             socket.on('private_message', function (data) {
-    //                 $scope.books.forEach(function (Book){
-    //                     Book.users.forEach(function (User) {
-    //                         if (data.sender === User.Username) {
-    //                             User.Messages.push({
-    //                                 Content: data.payload,
-    //                                 Sender: data.sender
-    //                             });
-    //                         }
-    //                     });
-    //                 });
-    //                 $scope.$apply();
-    //             });
-    //             socket.on('group_message', function (data) {
-    //                 $scope.books.forEach(function (Book){
-    //                     if (data.group === Book._id) {
-    //                         Book.Messages.push({
-    //                             Content: data.payload,
-    //                             Sender: data.sender
-    //                         });
-    //                     }
-    //                 });
-    //                 $scope.$apply();
-    //             });
-    //             socket.on('disconnect', function(){
-    //                 alert('socket disconnected, please try again in a few minutes')
-    //             });
-    //         }
-    //
-      //   function initMessages () {
-      //       var groupMessagesPromises = [];
-      //       var privateMessagesPromises = [];
-      //       $q.when().then(
-      //           () => {
-      //               var booksPromises = [];
-      //               $scope.books.forEach(function (Book) {
-      //                   booksPromises.push(
-      //                       function () {
-      //                           return $http(
-      //                               {
-      //                                   method: 'GET',
-      //                                   url: '/users/' + Book._id
-      //                               }
-      //                           );
-      //                       }()
-      //                   );
-      //               })
-      //
-      //               return $q.all(booksPromises);
-      //           }
-      //       ).then(
-      //           function (Response) {
-      //               $scope.books.forEach(function (Book){
-      //                   Book.Show = false;
-      //                   Book.GroupMessageContent = '';
-      //                   Book.Messages = [];
-      //                   Response.forEach(function (BookAndUsernames){
-      //                       if (BookAndUsernames.data.BookId === Book._id) {
-      //                           Book.users.forEach(function (UserId, Index) {
-      //                               Book.users[Index] = {
-      //                                   UserId: UserId,
-      //                                   Username: BookAndUsernames.data.Usernames[Index],
-      //                                   ShowChatInput: false,
-      //                                   PrivateMessageContent: '',
-      //                                   Messages: []
-      //                               };
-      //                               if ($scope.myUserName === BookAndUsernames.data.Usernames[Index]) {
-      //                                   $scope.myUserId = UserId;
-      //                               }
-      //                               privateMessagesPromises.push(
-      //                                   function () {
-      //                                       return $http(
-      //                                           {
-      //                                               method: 'GET',
-      //                                               url: '/messages/private/' + $scope.myUserName + '/' + UserId
-      //                                           }
-      //                                       );
-      //                                   }()
-      //                               );
-      //                           });
-      //                       }
-      //                   });
-      //                   groupMessagesPromises.push(
-      //                       function () {
-      //                           return $http(
-      //                               {
-      //                                   method: 'GET',
-      //                                   url: '/messages/group/' + Book._id
-      //                               }
-      //                           );
-      //                       }()
-      //                   );
-      //               });
-      //               return $q.all(groupMessagesPromises);
-      //           }
-      //       ).then(
-      //           (AllBooksMessages) => {
-      //               AllBooksMessages.forEach(function (BookMessages) {
-      //                   $scope.books.forEach(function(Book) {
-      //                       BookMessages.data.forEach(function (Message) {
-      //                           if (Book._id === Message.receiver) {
-      //                               Book.Messages.push(
-      //                                   {
-      //                                       Content: Message.content,
-      //                                       Sender: Message.senderName
-      //                                   }
-      //                               )
-      //                           }
-      //                       })
-      //                   })
-      //               })
-      //               return $q.all(privateMessagesPromises);
-      //           }
-      //       ).then(
-      //           (PrivateMessages) => {
-      //               PrivateMessages.forEach(function (PrivateMessageForUser) {
-      //                   PrivateMessageForUser.data.forEach(function (Message, Index1) {
-      //                       $scope.books.forEach(function(Book) {
-      //                           Book.users.forEach(function (User, Index2) {
-      //                               if (User.UserId === Message.sender) {//sent to me
-      //                                   User.Messages.push({
-      //                                       Content: Message.content,
-      //                                       Sender: User.Username
-      //                                   });
-      //                               } else if (User.UserId === Message.receiver) {// sent by me
-      //                                   User.Messages.push({
-      //                                       Content: Message.content,
-      //                                       Sender: $scope.myUserName
-      //                                   });
-      //                               }
-      //                           })
-      //                       });
-      //                   })
-      //               });
-      //           }
-      //       )
-      //   }
-      //
-      //   initSocket();
-      //   initMessages();
-      // });
-    //
-    //     });
-    // };
-
 });
 

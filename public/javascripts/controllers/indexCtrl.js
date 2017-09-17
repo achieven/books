@@ -22,7 +22,6 @@ app.controller("indexCtrl", function($scope, $http, $window) {
         };
 		$http.post("connection",data).then(
 	       	function(response){
-				debugger;
 	       		if(response.data.authsuccess) {
 	         		$scope.name = response.data.name;
 	         		$scope.type = response.data.type;

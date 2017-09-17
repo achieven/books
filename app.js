@@ -79,7 +79,6 @@ var server = http.createServer(app);
 server.listen(8002);
 var IO = require('socket.io').listen(server);
 app.IO = IO;
-
 var chatServer = require('./chatServer')(app.IO);
 
 var User = require("./models/user");

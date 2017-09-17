@@ -17,7 +17,7 @@ router.get('/getGroups',function(req,res)
     )
 });
 
-router.post('/addNewGroup/:GroupName/:Admin',function(req,res)
+router.post('/addNewGroup/:GroupName',function(req,res)
 {
     var newGroup = new Group(
         {

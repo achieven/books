@@ -32,7 +32,7 @@ router.get('/search/:RoomId',function(req,res)
         room: req.params.RoomId,
         payload: new RegExp(req.query.Payload),
         date: {
-            $gte: new Date(req.query.FromDate).setHours(0,0,0),
+            $gte: (new Date(req.query.FromDate)).setHours(0,0,0),
             $lte: (new Date(req.query.ToDate)).setHours(23,59,59),
         }
     };
@@ -46,7 +46,7 @@ router.get('/search/:RoomId',function(req,res)
                     skip = Result - 20;
                 }
             }
-            Message.find(matchQuery).skip(skip).limit(skip).then(
+            Message.find(matchQuery).skip(skip).limit(limit).then(
                 function (Messages) {
                     res.send(Messages);
                 }
